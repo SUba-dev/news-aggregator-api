@@ -71,7 +71,7 @@ class AuthController extends Controller
     public function resetPassword(ResetPasswordRequest $request)
     {
         try {
-            $this->userService->resetPassword($request->validated());
+            $this->userService->resetPwd($request->validated());
 
             return response()->json([
                 'status' => true,

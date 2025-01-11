@@ -96,5 +96,20 @@ class AuthService
     }
 
 
-    
+    public function resetPwd(array $data)
+    {
+        try {
+            $status = Password::sendResetLink($data);
+
+            if ($status !== Password::RESET_LINK_SENT) {
+                throw new CustomException(__($status), 400);
+            }
+
+            return response()->json([
+                'message' => __($status),
+            ]);
+        } catch (\Exception $e) {
+            throw new CustomException('Failed to reset password: ' . $e->getMessage(), 500);
+        }
+    }
 }

@@ -54,9 +54,9 @@ class Handler extends ExceptionHandler
             ], 401);
         }
      
-        return response()->json([
-            'status' => false,
-            'error' => 'An unexpected error occurred. Please try again later.',
-        ], 500);
+        // return response()->json([
+        //     'status' => false,
+        //     'error' => 'An unexpected error occurred. Please try again later.',
+        // ], 500);
     }
 }
