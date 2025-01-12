@@ -26,6 +26,7 @@ return new class extends Migration
             $table->unique(['source', 'news_source_id', 'title', 'published_at']);
             $table->timestamps();
 
+            
             // Foreign key constraints
             $table->foreign('news_source_id')->references('id')->on('news_sources')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

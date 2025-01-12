@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserPreferenceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,12 +29,19 @@ Route::prefix('auth')->group(function () {
 });
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-});
+// Route::middleware(['auth:sanctum', 'throttle:60,1'])
+Route::middleware(['auth:api', 'throttle:60,1'])
+    ->group(function () {
+        Route::post('auth/logout', [AuthController::class, 'logout']);
 
-Route::prefix('articles')->group(function () {
-    Route::get('list', [ArticleController::class, 'list']);
-    Route::get('show', [ArticleController::class, 'show']);
-    Route::get('search', [ArticleController::class, 'search']);
-});
+        Route::prefix('articles')->group(function () {
+            Route::get('list', [ArticleController::class, 'list']);
+            Route::get('show', [ArticleController::class, 'show']);
+            Route::get('search', [ArticleController::class, 'search']);
+            Route::get('user-preferences', [ArticleController::class, 'personalizedFeed']);
+        });
+        Route::prefix('user')->group(function () {
+            Route::post('preferences', [UserPreferenceController::class, 'store']);
+            Route::get('preferences', [UserPreferenceController::class, 'show']);
+        });
+    });

@@ -56,12 +56,12 @@ class Handler extends ExceptionHandler
             ], 401);
         }
 
-        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Record not found.',
-            ], 404);
-        }
+        // if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Record not found.',
+        //     ], 404);
+        // }
      
         // return response()->json([
         //     'status' => false,
