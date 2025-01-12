@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articals', function (Blueprint $table) {
+        Schema::create('articles', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->string('source', 100)->nullable();
             $table->unsignedBigInteger('news_source_id'); // Foreign key referencing news_sources table
@@ -38,11 +38,11 @@ return new class extends Migration
     public function down(): void
     {
         // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Schema::table('articals', function (Blueprint $table) {
+        Schema::table('articles', function (Blueprint $table) {
             $table->dropForeign(['news_source_id']);  
             $table->dropForeign(['category_id']);    
         });
-        Schema::dropIfExists('articals');
+        Schema::dropIfExists('articles');
 
         Schema::dropIfExists('news_sources');
         Schema::dropIfExists('categories');

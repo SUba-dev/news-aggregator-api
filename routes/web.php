@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/test', [NewsController::class, 'fetchNews']);
+
 Route::get('/', [NewsController::class, 'index']);
+Route::get('/articles/list', [ArticleController::class, 'list']);
+Route::get('/articles/show', [ArticleController::class, 'show']);
+Route::get('/articles/search', [ArticleController::class, 'search']);

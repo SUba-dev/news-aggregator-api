@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,10 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
+});
+
+Route::prefix('articles')->group(function () {
+    Route::get('list', [ArticleController::class, 'list']);
+    Route::get('show', [ArticleController::class, 'show']);
+    Route::get('search', [ArticleController::class, 'search']);
 });

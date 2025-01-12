@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\DTOs\NewsArticleDto;
 use App\Factories\NewsRepositoryFactory;
-use App\Models\Artical;
+use App\Models\Article;
 use App\Models\Category;
 use App\Models\NewsSource;
 use app\Repositories\EloquentArticleRepository;
@@ -46,7 +46,7 @@ class NewsFetchService
                     $article['publishedAt']
                 );
 
-                Artical::updateOrCreate([
+                Article::updateOrCreate([
                     'source' => $newDto->source ?? "",
                     'news_source_id' => $newDto->sourceId ?? 1,
                     'category_id' => $newDto->categoryId ?? 1,
