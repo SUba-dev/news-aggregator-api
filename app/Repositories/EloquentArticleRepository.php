@@ -77,6 +77,13 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
     }
 
 
+    public function getPersonalizedArticle(array $filters): Collection
+    {
+        $query = Article::query();
+        $this->filterbyPreference($query, $filters);
+        return $query->get();
+    }
+
     public function getArticleById(int $id): ?Article
     {
         return Article::find($id);
@@ -145,6 +152,21 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
                 'category' => $query->withCategoryName($value),
                 default => $query,
             };
+        }
+    }
+
+
+    private function filterbyPreference(Builder $query, array $filters)
+    {
+        foreach ($filters as $filter => $value) {
+            if (!empty($value)) {
+                $query = match ($filter) {
+                    'preferred_sources' => $query->whereIn('news_source_id', $value),
+                    'preferred_categories' => $query->whereIn('category_id', $value),
+                    'preferred_authors' => $query->whereIn('author', $value),
+                    default => $query,
+                };
+            }
         }
     }
 }

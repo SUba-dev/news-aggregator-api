@@ -53,6 +53,8 @@ class Article extends Model
         }
     }
 
+   
+
     public function scopeWithCategoryName(Builder $query, string|array $categoryNames): Builder
     {
         if (is_array($categoryNames)) {

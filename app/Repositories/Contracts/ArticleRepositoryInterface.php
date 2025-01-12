@@ -17,6 +17,7 @@ interface ArticleRepositoryInterface
     public function getAllArticle(): Collection;
     public function getAllArticleWithPagination(): LengthAwarePaginator;
     public function searchArticles(array $filters): Collection;
+    public function getPersonalizedArticle(array $filters): Collection;
 
     public function getArticleBySourceId(int $sourceId): Collection;
     public function getArticleBySources(array $sources): Collection;

@@ -8,17 +8,18 @@ use App\Http\Requests\ArticleSearchRequest;
 use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use app\Repositories\EloquentArticleRepository;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ArticleController extends Controller
 {
-    private ArticleService $service;
+    private EloquentArticleRepository $articleRepo;
 
-    public function __construct(ArticleService $service)
+    public function __construct(EloquentArticleRepository $repo)
     {
-        $this->service = $service;
+        $this->articleRepo = $repo;
     }
 
 
@@ -32,9 +33,9 @@ class ArticleController extends Controller
             if ($request->has('perPage') || $request->has('page')) {
                 $perPage = $request->input('perPage', 10);
                 $page = $request->input('page', 1);
-                $articles = $this->service->listAllArticlesWithPagination($perPage, $page);
+                $articles = $this->articleRepo->getAllArticleWithPagination($perPage, $page);
             } else {
-                $articles = $this->service->listAllArticles();
+                $articles = $this->articleRepo->getAllArticle();
             }
             if (!$articles) {
                 return ApiResponse::notFound();
@@ -52,7 +53,7 @@ class ArticleController extends Controller
     {
         $id = trim($request->input('id'));
         try {
-            $article = $this->service->viewArticle($id);
+            $article = $this->articleRepo->getArticleById($id);
             if (!$article) {
                 return ApiResponse::notFound();
             }
@@ -73,7 +74,7 @@ class ArticleController extends Controller
         })->toArray();
 
         try {
-            $articles = $this->service->searchArticles($filters);
+            $articles = $this->articleRepo->searchArticles($filters);
             if (!$articles) {
                 return ApiResponse::notFound();
             }
@@ -81,6 +82,27 @@ class ArticleController extends Controller
         } catch (\Exception $e) {
             print_r($e->getMessage());
             return ApiResponse::error('Failed to retrieve article.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function personalizedArticle(Request $request)
+    {
+        try {
+            $user = $request->user();
+            $userPreferences = $user->preferences;
+            if (!$userPreferences) {
+                return ApiResponse::notFound('User preferences not found.');
+            }
+            $filters = [
+                'preferred_sources' => array_values($user->preferences->preferred_sources),
+                'preferred_categories' => array_values($user->preferences->preferred_categories),
+                'preferred_authors' => array_values($user->preferences->preferred_authors),
+            ];
+            $articles = $this->articleRepo->getPersonalizedArticle($filters);
+            return ApiResponse::success(new ArticleCollection($articles), Response::HTTP_OK);
+        } catch (\Exception $e) {
+            // print_r($e->getMessage());
+            return ApiResponse::error('Failed to retrieve personalized news feed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

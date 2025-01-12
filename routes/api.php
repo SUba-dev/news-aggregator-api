@@ -38,7 +38,7 @@ Route::middleware(['auth:api', 'throttle:60,1'])
             Route::get('list', [ArticleController::class, 'list']);
             Route::get('show', [ArticleController::class, 'show']);
             Route::get('search', [ArticleController::class, 'search']);
-            Route::get('user-preferences', [ArticleController::class, 'personalizedFeed']);
+            Route::get('userPreferences', [ArticleController::class, 'personalizedArticle']);
         });
         Route::prefix('user')->group(function () {
             Route::post('preferences', [UserPreferenceController::class, 'store']);

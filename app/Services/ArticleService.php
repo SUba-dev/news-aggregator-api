@@ -37,4 +37,11 @@ class ArticleService
     {
         return $this->articleRepo->searchArticles($query);
     }
+
+
+    public function getPersonalizedArticle($query)
+    {
+        return $this->articleRepo->getPersonalizedArticle($query);
+    }
+    
 }
