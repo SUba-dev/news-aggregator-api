@@ -15,15 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::get('/test', [NewsController::class, 'fetchNewsApi']);
-Route::get('/g', [NewsController::class, 'fetchGuardianNews']);
-Route::get('/n', [NewsController::class, 'fetchNewyorkTimes']);
-
-Route::get('/', [NewsController::class, 'index']);
-Route::get('/articles/list', [ArticleController::class, 'list']);
-Route::get('/articles/show', [ArticleController::class, 'show']);
-Route::get('/articles/search', [ArticleController::class, 'search']);

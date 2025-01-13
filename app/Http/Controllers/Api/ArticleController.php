@@ -24,8 +24,48 @@ class ArticleController extends Controller
 
 
 
-    /** 
-     * List all articles
+    /**
+     * @OA\Get(
+     *     path="/api/articles/list",
+     *     summary="List Articles",
+     *     description="Get a list of articles.",
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Number of articles per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/Resources/ArticleCollection")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No articles found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve article."
+     *     )
+     * )
      */
     public function list(Request $request)
     {
@@ -46,8 +86,34 @@ class ArticleController extends Controller
         }
     }
 
-    /** 
-     * View article
+    /**
+     * @OA\Get(
+     *     path="/api/articles/show",
+     *     summary="View Article",
+     *     description="View details of a specific article.",
+     *     security={{"bearerAuth": {}}}, 
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="query",
+     *         description="ID of the article",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         @OA\JsonContent(ref="#/Resources/ArticleResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Article not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve article."
+     *     )
+     * )
      */
     public function show(Request $request)
     {
@@ -64,7 +130,97 @@ class ArticleController extends Controller
     }
 
 
-
+    /**
+     * @OA\Get(
+     *     path="/api/articles/search",
+     *     summary="Search for articles",
+     *     description="Search articles based on various criteria.",
+     *     security={{"bearerAuth": {}}}, 
+     *     @OA\Parameter(
+     *         name="keyword",
+     *         in="query",
+     *         description="Keyword to search for in articles",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="fromDate",
+     *         in="query",
+     *         description="Start date for the search (YYYY-MM-DD)",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="date"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="toDate",
+     *         in="query",
+     *         description="End date for the search (YYYY-MM-DD)",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string",
+     *             format="date"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="query",
+     *         description="Category of articles (e.g., 'technology', 'sports')",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="source",
+     *         in="query",
+     *         description="Source of articles (e.g., 'The New York Times')",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Number of articles per page",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/Resources/ArticleCollection")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No articles found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve article."
+     *     )
+     * )
+     */
     public function search(ArticleSearchRequest $request)
     {
         $inputFilter = $request->only(['keyword', 'fromDate', 'toDate', 'category', 'source', 'perPage', 'page']);
@@ -85,6 +241,36 @@ class ArticleController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/articles/user-preferences",
+     *     summary="Get Personalized Articles",
+     *     description="Retrieves a list of articles personalized for the authenticated user based on their preferences.",
+     *     security={{"bearerAuth": {}}}, 
+     *     @OA\Response(
+     *         response=200,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/Resources/ArticleCollection")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User preferences not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve personalized news feed."
+     *     )
+     * )
+     */
     public function personalizedArticle(Request $request)
     {
         try {

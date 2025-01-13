@@ -41,9 +41,9 @@ class NewYorkTimesJob implements ShouldQueue
         $this->source = 'newyork_times';
         $this->query = [
             'q' => Arr::random(config('constants.default_query', ['technology'])),
-            // 'sort' => "relevance",
-            // 'begin_date' => now()->subDay()->format('Y-m-d'),
-            // 'end_date' => now()->format('Y-m-d'),
+            'sort' => "relevance",
+            'begin_date' => now()->subDay()->format('Y-m-d'),
+            'end_date' => now()->format('Y-m-d'),
             'page' => 1,
         ];
     }

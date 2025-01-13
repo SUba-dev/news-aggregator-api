@@ -20,17 +20,34 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
         //$this->model = $model;
     }
 
-    
+    /**
+     * Retrieves all articles from the database.
+     *
+     * @return Collection 
+     */
     public function getAllArticle(): Collection
     {
         return Article::all();
     }
 
+    /**
+     * Retrieves all articles with pagination.
+     *
+     * @param int $perPage Number of articles per page
+     * @param int $page Page number
+     * @return LengthAwarePaginator
+     */
     public function getAllArticleWithPagination(int $perPage = 10, int $page = 1): LengthAwarePaginator
     {
         return Article::paginate($perPage, ['*'], 'page', $page);
     }
 
+    /**
+     * Searches for articles based on given filters.
+     *
+     * @param array $filters Array of filters (e.g., 'keyword', 'fromDate', 'toDate', 'source', 'category')
+     * @return Collection
+     */
     public function searchArticles(array $filters): Collection
     {
         $query = Article::query();
@@ -39,6 +56,12 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
     }
 
 
+    /**
+     * Retrieves personalized articles based on user preferences.
+     *
+     * @param array $filters Array of filters (e.g., 'preferred_sources', 'preferred_categories', 'preferred_authors')
+     * @return Collection
+     */
     public function getPersonalizedArticle(array $filters): Collection
     {
         $query = Article::query();
@@ -46,40 +69,72 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
         return $query->get();
     }
 
+
+    /**
+     * Retrieves an article by its ID.
+     *
+     * @param int $id Article ID
+     * @return Article|null
+     */
     public function getArticleById(int $id): ?Article
     {
         return Article::find($id);
     }
 
 
-
+    /**
+     * Retrieves articles by source ID.
+     *
+     * @param int $sourceId Source ID
+     * @return Collection
+     */
     public function getArticleBySourceId(int $sourceId): Collection
     {
         return Article::where('news_source_id', $sourceId)->get();
     }
 
 
-
+    /**
+     * Retrieves articles by an array of source name.
+     *
+     * @param array $sources Array of source name
+     * @return Collection
+     */
     public function getArticleBySources(array $sources): Collection
     {
         return Article::withSourceName($sources)->get();
     }
 
 
-
+    /**
+     * Retrieves articles by category ID.
+     *
+     * @param int $categoryId Category ID
+     * @return Collection
+     */
     public function getArticleByCategoryId(int $categoryId): Collection
     {
         return Article::where('category_id', $categoryId)->get();
     }
 
-
+    /**
+     * Retrieves articles by an array of category name.
+     *
+     * @param array $categories Array of category names
+     * @return Collection
+     */
     public function getArticleByCategories(array $categories): Collection
     {
         return Article::withCategoryName($categories)->get();
     }
 
 
-
+    /**
+     * Retrieves articles by author(s).
+     *
+     * @param string|array $authors Author name(s)
+     * @return Collection
+     */
     public function getArticleByAuthors(string|array $authors): Collection
     {
         $query = Article::query();
@@ -102,7 +157,13 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
 
 
 
-
+    /**
+     * Filters articles based on various criteria.
+     *
+     * @param Builder $query Query builder instance
+     * @param array $filters Array of filters
+     * @return Builder
+     */
     private function filterbyData(Builder $query, array $filters)
     {
         foreach ($filters as $filter => $value) {
@@ -118,6 +179,13 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
     }
 
 
+    /**
+     * Filters articles based on user preferences.
+     *
+     * @param Builder $query Query builder instance
+     * @param array $filters Array of filters (e.g., 'preferred_sources', 'preferred_categories', 'preferred_authors')
+     * @return Builder
+     */
     private function filterbyPreference(Builder $query, array $filters)
     {
         foreach ($filters as $filter => $value) {

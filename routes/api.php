@@ -21,25 +21,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('auth')->group(function () {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('forget-password', [AuthController::class, 'forgetPassword']);
-    Route::post('reset-password', [AuthController::class, 'resetPassword']);
-});
-
-
-
-Route::middleware(['auth:api', 'api.security', 'throttle:60,1'])
+Route::middleware(['api.security', 'throttle:60,1'])
     ->group(function () {
+        Route::post('login', [AuthController::class, 'login'])->name('login');
+        Route::prefix('auth')->group(function () {
+            Route::post('register', [AuthController::class, 'register']);
+            Route::post('login', [AuthController::class, 'login']);
+            Route::post('forgot-password', [AuthController::class, 'forgetPassword']);
+            Route::post('reset-password', [AuthController::class, 'resetPassword']);
+        });
+    });
 
+
+Route::middleware(['auth:sanctum', 'api.security', 'throttle:60,1'])
+    ->group(function () {
         Route::post('auth/logout', [AuthController::class, 'logout']);
-
+        
         Route::prefix('articles')->group(function () {
             Route::get('list', [ArticleController::class, 'list']);
             Route::get('show', [ArticleController::class, 'show']);
             Route::get('search', [ArticleController::class, 'search']);
-            Route::get('userPreferences', [ArticleController::class, 'personalizedArticle']);
+            Route::get('user-preferences', [ArticleController::class, 'personalizedArticle']);
         });
 
         Route::prefix('user')->group(function () {

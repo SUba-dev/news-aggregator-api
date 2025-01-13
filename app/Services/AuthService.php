@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ForgotPasswordMail;
 
 class AuthService
 {
@@ -15,6 +17,7 @@ class AuthService
 
     /**
      * Create User
+     *
      * @param array $data
      * @return User
      */
@@ -32,6 +35,7 @@ class AuthService
 
     /**
      * Login User
+     *
      * @param array $data
      * @return User
      */
@@ -52,7 +56,8 @@ class AuthService
 
     /**
      * Logout User
-     * @param User $User
+     *
+     * @param User $user
      * @return bool
      */
     public function logout($user)
@@ -60,10 +65,11 @@ class AuthService
         return $user->tokens()->delete();
     }
 
-    /**
-     * Forget Password User
+     /**
+     * Forgot Password User
+     *
      * @param string $email
-     * @return User
+     * @return bool
      */
     public function forgotPassword(string $email)
     {
@@ -80,11 +86,13 @@ class AuthService
             ])->save();
 
             // Need to handle the forget pwd email service. 
+            // Mail::to($user->email)->send(new ForgotPasswordMail($user, $token));
     }
 
 
     /**
      * Reset Password User
+     *
      * @param array $data
      * @return User
      */

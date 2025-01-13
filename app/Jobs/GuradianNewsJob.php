@@ -42,8 +42,8 @@ class GuradianNewsJob implements ShouldQueue
         $this->query = [
             'q' => Arr::random(config('constants.default_query', ['technology'])),
             'pageSize' => 20,
-            // 'tag' => "politics",
-            // 'from-date' => now()->subDay()->format('Y-m-d'),
+            'tag' => "politics",
+            'from-date' => now()->subDay()->format('Y-m-d'),
             'page' => 1,
         ];
     }
