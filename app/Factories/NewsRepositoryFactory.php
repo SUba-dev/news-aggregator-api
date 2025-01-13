@@ -11,6 +11,10 @@ class NewsRepositoryFactory
 {
     public static function make(string $source): NewsRepositoryInterface
     {
+        if (app()->environment('testing')) {
+            return app(NewsRepositoryInterface::class);
+        }
+        
         return match ($source) {
             'newsapi' => new NewsApiOrgRepository(),            
             'guardian' => new GuardianApiRepository (), 

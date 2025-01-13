@@ -20,45 +20,7 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
         //$this->model = $model;
     }
 
-    public function store($articleDto): void
-    {
-        // $article = $this->model->create([
-        //     'source'      => $articleDto->source,
-        //     'news_source_id'      => $articleDto->sourceId,
-        //     'category_id'      => $articleDto->categoryId,
-        //     'title'       => $articleDto->title,
-        //     'author'       => $articleDto->author,
-        //     'description' => $articleDto->description,
-        //     'content' => $articleDto->content,
-        //     'url'         => $articleDto->url,
-        //     'published_at'   => $articleDto->publishedAt,
-        // ]);
-
-        // return $article;
-    }
-
-
-
-    public function editOrCreate($articleDto): void
-    // public function editOrCreate(NewsArticleDto $articleDto): Model
-    {
-        // $article = $this->model->updateOrCreate([
-        //     'source'      => $articleDto->source,
-        //     'news_source_id'      => $articleDto->sourceId,
-        //     'category_id'      => $articleDto->categoryId,
-        //     'title'       => $articleDto->title,
-        //     'author'       => $articleDto->author,
-        //     'description' => $articleDto->description,
-        //     'content' => $articleDto->content,
-        //     'url'         => $articleDto->url,
-        //     'published_at'   => $articleDto->publishedAt,
-        // ]);
-
-        // return $article;
-    }
-
-
-
+    
     public function getAllArticle(): Collection
     {
         return Article::all();
@@ -168,5 +130,42 @@ class EloquentArticleRepository implements ArticleRepositoryInterface
                 };
             }
         }
+    }
+
+    public function store($articleDto): void
+    {
+        // $article = $this->model->create([
+        //     'source'      => $articleDto->source,
+        //     'news_source_id'      => $articleDto->sourceId,
+        //     'category_id'      => $articleDto->categoryId,
+        //     'title'       => $articleDto->title,
+        //     'author'       => $articleDto->author,
+        //     'description' => $articleDto->description,
+        //     'content' => $articleDto->content,
+        //     'url'         => $articleDto->url,
+        //     'published_at'   => $articleDto->publishedAt,
+        // ]);
+
+        // return $article;
+    }
+
+
+
+    public function editOrCreate($articleDto): void
+    // public function editOrCreate(NewsArticleDto $articleDto): Model
+    {
+        // $article = $this->model->updateOrCreate([
+        //     'source'      => $articleDto->source,
+        //     'news_source_id'      => $articleDto->sourceId,
+        //     'category_id'      => $articleDto->categoryId,
+        //     'title'       => $articleDto->title,
+        //     'author'       => $articleDto->author,
+        //     'description' => $articleDto->description,
+        //     'content' => $articleDto->content,
+        //     'url'         => $articleDto->url,
+        //     'published_at'   => $articleDto->publishedAt,
+        // ]);
+
+        // return $article;
     }
 }

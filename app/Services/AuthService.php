@@ -48,6 +48,12 @@ class AuthService
         return $user;
     }
 
+
+    /**
+     * Logout User
+     * @param User $User
+     * @return bool
+     */
     public function logout($user)
     {
         return $user->tokens()->delete();

@@ -29,9 +29,10 @@ Route::prefix('auth')->group(function () {
 });
 
 
-// Route::middleware(['auth:sanctum', 'throttle:60,1'])
-Route::middleware(['auth:api', 'throttle:60,1'])
+
+Route::middleware(['auth:api', 'api.security', 'throttle:60,1'])
     ->group(function () {
+
         Route::post('auth/logout', [AuthController::class, 'logout']);
 
         Route::prefix('articles')->group(function () {
@@ -40,6 +41,7 @@ Route::middleware(['auth:api', 'throttle:60,1'])
             Route::get('search', [ArticleController::class, 'search']);
             Route::get('userPreferences', [ArticleController::class, 'personalizedArticle']);
         });
+
         Route::prefix('user')->group(function () {
             Route::post('preferences', [UserPreferenceController::class, 'store']);
             Route::get('preferences', [UserPreferenceController::class, 'show']);
