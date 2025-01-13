@@ -12,6 +12,7 @@ class NewsRepositoryFactory
     {
         return match ($source) {
             'newsapi' => new NewsApiOrgRepository(),            
+            'guardian' => new GuardianApiRepository (),            
             default => throw new \InvalidArgumentException("Invalid news source: $source"),
         };
     }

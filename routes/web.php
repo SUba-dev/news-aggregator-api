@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/test', [NewsController::class, 'fetchNews']);
+Route::get('/test', [NewsController::class, 'fetchNewsApi']);
+Route::get('/g', [NewsController::class, 'fetchGuardianNews']);
 
 Route::get('/', [NewsController::class, 'index']);
 Route::get('/articles/list', [ArticleController::class, 'list']);

@@ -14,7 +14,7 @@ return [
     ],
     'guardian' => [
         'api-key' => env('GUARDIAN_API_KEY', ''),
-        'api-url' => 'https://newsapi.org/v2',
+        'api-url' => 'https://content.guardianapis.com',
     ],
     'newyorktimes' => [
         'api-key' => env('NEWYORKTIMES_API_KEY', ''),

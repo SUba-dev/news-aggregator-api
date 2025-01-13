@@ -17,7 +17,28 @@ class NewsController extends Controller
         $this->newsFetchService = $newsFetchService;
     }
 
-    public function fetchNews(): JsonResponse
+    public function fetchGuardianNews(): JsonResponse
+    {
+        $source='guardian';
+        try {
+            $randomQuery = Arr::random(config('constants.default_query', ['technology']));
+            $data = [
+                    'q' => $randomQuery,
+                    // 'tag' => "politics",
+                    // 'from-date' => now()->subDay()->format('Y-m-d'),
+                    'page' => 1,
+                
+            ];
+            $news = $this->newsFetchService->getNews($source, $data);
+
+            return response()->json(['status' => true,'data'=> $news]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+
+    public function fetchNewsApi(): JsonResponse
     {
         $source='newsapi';
         try {
