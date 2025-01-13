@@ -8,22 +8,53 @@ use App\Repositories\Contracts\NewsRepositoryInterface;
 use App\Services\CacheService;
 use App\Services\NewsFetchService;
 use Mockery;
+use Faker\Factory as Faker;
+use Illuminate\Support\Facades\DB;
 
 class NewsFetchServiceTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+    
+        // Insert or update news source record
+        DB::table('news_sources')->updateOrInsert(
+            ['id' => 1], 
+            [
+                'name' => 'newsapi',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+    
+        // Insert or update category record
+        DB::table('categories')->updateOrInsert(
+            ['id' => 1], 
+            [
+                'name' => 'general',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+    }
 
     /**
-     * 
+     * @test
      * Test news service store articles
      * 
      */
 
-    public function testNewsStoresArticles()
+    public function test_news_stores_articles()
     {
         // Mock repository and cache service
         $mockRepo = Mockery::mock(NewsRepositoryInterface::class);
         $mockCacheService = Mockery::mock(CacheService::class);
 
+        $faker = Faker::create();
+        $title=$faker->sentence(6, true); 
+        $author = $faker->name; 
+        $source= $faker->company;
+        
         // Mock repository response
         $mockRepo->shouldReceive('fetchNews')
             ->once()
@@ -36,12 +67,12 @@ class NewsFetchServiceTest extends TestCase
             ])
             ->andReturn([
                 [
-                    'source' => 'BBC News',
-                    'author' => 'Suba',
-                    'title' => 'Test Title',
-                    'description' => 'Test Description',
-                    'content' => 'Test Content',
-                    'url' => 'https://example.com',
+                    'source' => $source,
+                    'author' => $author,
+                    'title' => $title,
+                    'description' => $faker->paragraph,
+                    'content' => $faker->text,
+                    'url' => $faker->url,
                     'publishedAt' => now()->toIso8601String(),
                 ],
             ]);
@@ -72,19 +103,19 @@ class NewsFetchServiceTest extends TestCase
 
 
         $this->assertNotEmpty($result);
-        $this->assertEquals('Suba', $result[0]['author']);
-        $this->assertEquals('BBC News', $result[0]['source']);
-        $this->assertEquals('Test Title', $result[0]['title']);
+        $this->assertEquals($author, $result[0]['author']);
+        $this->assertEquals($source, $result[0]['source']);
+        $this->assertEquals($title, $result[0]['title']);
     }
 
 
     /**
-     * 
+     * @test
      * Test news service handle the empty response
      * 
      */
 
-    public function testNewsHandlesEmptyResponse()
+    public function test_news_handles_empty_response()
     {
         $mockRepo = Mockery::mock(NewsRepositoryInterface::class);
         $mockCacheService = Mockery::mock(CacheService::class);
@@ -116,12 +147,12 @@ class NewsFetchServiceTest extends TestCase
 
 
     /**
-     * 
+     * @test
      * Test news service handle the api failure
      * 
      */
 
-    public function testNewsHandleApiFailure()
+    public function test_news_handle_api_failure()
     {
         $mockRepo = Mockery::mock(NewsRepositoryInterface::class);
         $mockCacheService = Mockery::mock(CacheService::class);

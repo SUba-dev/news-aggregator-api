@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 
 class AuthService
 {
+    
 
     /**
      * Create User
