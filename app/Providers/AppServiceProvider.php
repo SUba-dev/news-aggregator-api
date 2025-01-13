@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
             return new EloquentUserPreferenceRepository(); 
         });      
         
+        $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
     }
 
     /**
