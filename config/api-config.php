@@ -19,6 +19,6 @@ return [
     'newyorktimes' => [
         'api-key' => env('NEWYORKTIMES_API_KEY', ''),
         'api-secret' => env('NEWYORKTIMES_API_SECRET', ''),
-        'api-url' => 'https://newsapi.org/v2',
+        'api-url' => 'https://api.nytimes.com/svc/search/v2/articlesearch.json',
     ],
 ];

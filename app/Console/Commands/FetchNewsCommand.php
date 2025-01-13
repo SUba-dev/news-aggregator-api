@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\GuradianNewsJob;
 use App\Jobs\NewsApiNewsJob;
+use App\Jobs\NewYorkTimesJob;
 use App\Services\NewsFetchService;
 use Illuminate\Console\Command;
 
@@ -33,6 +34,8 @@ class FetchNewsCommand extends Command
             dispatch(new NewsApiNewsJob())->onQueue('default');
 
             dispatch(new GuradianNewsJob())->onQueue('default');
+
+            dispatch(new NewYorkTimesJob())->onQueue('default');
 
             $this->info('News fetched successfully.');
             

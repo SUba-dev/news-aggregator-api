@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', [NewsController::class, 'fetchNewsApi']);
 Route::get('/g', [NewsController::class, 'fetchGuardianNews']);
+Route::get('/n', [NewsController::class, 'fetchNewyorkTimes']);
 
 Route::get('/', [NewsController::class, 'index']);
 Route::get('/articles/list', [ArticleController::class, 'list']);

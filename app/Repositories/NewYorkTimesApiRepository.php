@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Exception;
 use Illuminate\Support\Str;
 
-class GuardianApiRepository implements NewsRepositoryInterface
+class NewYorkTimesApiRepository implements NewsRepositoryInterface
 {
     private string $apiUrl;
     private string $apiKey;
@@ -17,8 +17,8 @@ class GuardianApiRepository implements NewsRepositoryInterface
     public function fetchNews(array $data): array
     {
          
-        $this->apiKey = Config::get('api-config.guardian.api-key') ?? "";
-        $this->apiUrl = Config::get('api-config.guardian.api-url') ?? "";
+        $this->apiKey = Config::get('api-config.newyorktimes.api-key') ?? "";
+        $this->apiUrl = Config::get('api-config.newyorktimes.api-url') ?? "";
 
         $defaultQuery = [
             'api-key' => $this->apiKey,
@@ -26,14 +26,16 @@ class GuardianApiRepository implements NewsRepositoryInterface
 
         $queryParams = array_merge($defaultQuery, $data);
 
-        $url = $this->apiUrl . '/search?' . http_build_query($queryParams);
+        $url = $this->apiUrl . '?' . http_build_query($queryParams);
         try {
             $client = new Client();
             $response = $client->get($url);
 
             if ($response->getStatusCode() === 200) {
                 $news = json_decode($response->getBody(), true);
-                $newsArr = $news['response'];
+                
+                $newsArr = $news['response']['docs'];
+                
                 return $this->newsResponse($newsArr);
             } else {
                 return ['status' => false, 'error' => 'Failed to fetch news data. Status code: ' . $response->getStatusCode()];
@@ -53,16 +55,16 @@ class GuardianApiRepository implements NewsRepositoryInterface
     private function newsResponse($news): array
     {
         $newsArticles = [];
-        if (isset($news['results']) && !empty($news['results'])) {
-            foreach ($news['results'] as $key => $article) {
+        if (isset($news) && !empty($news)) {
+            foreach ($news as $key => $article) {                 
                 $dto = array(
-                    'source' => $this->cleanCode($article['sectionName']) ?? 'Guardian',
+                    'source' => $this->cleanCode($article['source']) ?? 'New York Times',
                     'author' => "",
-                    'title' => $this->cleanCode(Str::limit($article['webTitle'], 140, '...')) ?? 'No Title',
-                    'description' => "",
+                    'title' => $this->cleanCode(Str::limit($article['snippet'], 140, '...')) ?? 'No Title',                   
+                    'description' => $this->cleanCode(Str::limit($article['lead_paragraph']), 200, '...') ?? null,
                     'content' => "",
-                    'url' => $this->cleanCode($article['webUrl']) ?? 'No URL',
-                    'publishedAt' => $this->cleanCode($article['webPublicationDate']) ?? null
+                    'url' => $this->cleanCode($article['web_url']) ?? 'No URL',
+                    'publishedAt' => $this->cleanCode($article['pub_date']) ?? null
                 );
                 $newsArticles[] = $dto;
             }
