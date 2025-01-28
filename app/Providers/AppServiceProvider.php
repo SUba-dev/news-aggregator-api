@@ -27,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
         });      
         
         $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
+
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
